@@ -23,11 +23,6 @@ void RaceController::startWithAnimation()
     Serial.println(F("Starting with animation..."));
 }
 
-bool RaceController::active()
-{
-    return (raceState == RaceRunning || raceState == RaceStarting);
-}
-
 void RaceController::run()
 {
     bool raceFinishedFlag = false;

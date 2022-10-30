@@ -23,7 +23,7 @@ public:
     void lap(uint8_t id);
 
     bool active();
-    bool finished() { return raceState == RaceFinished; }
+    bool finished();
 
     void showResults();
     void showWinnerStats();
@@ -53,6 +53,16 @@ private:
 
     unsigned long startTimestamp_ms = 0;
 };
+
+inline bool RaceController::active()
+{
+    return (raceState == RaceRunning) || (raceState == RaceStarting);
+}
+
+inline bool RaceController::finished()
+{
+    return (raceState == RaceFinished);
+}
 
 inline void RaceController::lap(uint8_t id)
 {

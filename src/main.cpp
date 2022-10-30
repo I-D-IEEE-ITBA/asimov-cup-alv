@@ -32,7 +32,7 @@ void setup()
 {
 	Serial.begin(115200);
 
-  // Configurar event listeners globales para todos los menues
+	// Configurar event listeners globales para todos los menues
 	menu_set_event_listener_display(read_menu_buttons, update_menu_display);
 	menu_set_real_time_loop(sensor_read_loop);
 
@@ -44,12 +44,12 @@ void setup()
 	pause_menu.set_option(0, "Resume", menu_force_close_current);
 	pause_menu.set_option(1, "Stop", [](){ raceControl.stop(); pause_menu.force_close(); });
 
-  // TEST: Nueva feature menu
+	// TEST: Nueva feature menu
 	numForm.begin(0, 12);
 	numForm.enable_option_roll = true;
 
-  // Estas opciones sirven para poder usar los menues solo con dos botones
-  // En efectos practicos, con un solo boton se puede recorrer todas las opciones de forma ciclica
+	// Estas opciones sirven para poder usar los menues solo con dos botones
+	// En efectos practicos, con un solo boton se puede recorrer todas las opciones de forma ciclica
 	pause_menu.enable_option_roll = true;
 	main_menu.enable_option_roll = true;
 
@@ -63,6 +63,10 @@ void setup()
 		menu_go_select(); // Seleccionar la opcion
 		// Serial.println(F("select"));
 	});
+
+	// milisegundos para considerar un long press (Se usa para detener la carrera)
+	btnNext.setPressTicks(1200);
+	btnSelect.setPressTicks(1200);
 
 
 	// Sensor de velocista TEST (emulador)
@@ -78,7 +82,7 @@ void setup()
 	});
 
 
-  // TODO: Implementar el autoajuste de sensores al inicio (ajustar a luz ambiental)
+	// TODO: Implementar el autoajuste de sensores al inicio (ajustar a luz ambiental)
 }
 
 void loop()
@@ -91,24 +95,27 @@ void start_race_option()
 {
 	raceControl.startWithAnimation(); // TODO: Agregar animacion
 
+	// Bucle bloqueante, hay que leer sensores y botones aca adentro
+	// Tiene que ser lo mas eficiente posible en velocidad para que el sensado sea optimo
 	while (raceControl.active())
 	{
 		raceControl.run();
 		sensor_read_loop(); 
 
+		// TODO: Agregar una seccion timeada para el display (sino no se ve el cronometro corriendo)
+		// 			Afectara el sensado? Hay que probar si mete delay al intento de DSP
+
 		read_menu_buttons();
-		if(btnNext.isLongPressed() || btnSelect.isLongPressed())
+		if(btnNext.isLongPressed() || btnSelect.isLongPressed()) // Forzar detencion de carrera
 		{
 			Serial.println(F("Race STOP!"));
 			raceControl.stop();
 		}
 	}
 
-	// FINISHED ANIMATION  // milisegundos para considerar un long press
-	btnNext.setPressTicks(1200);
-	btnSelect.setPressTicks(1200);
+	// FINISHED ANIMATION (No hay)
 
-  // TODO: Agregar animacion de finalizacion
+	// TODO: Agregar animacion de finalizacion
 	raceControl.showResults();
 
 	if(raceControl.finished()) // (we have a winner)
@@ -120,7 +127,7 @@ void start_race_option()
 void sensor_read_loop()
 {
 	btnIR.tick(); // SENSOR EMULATOR 
-  // TODO: Agregar el codigo de los filtros
+	// TODO: Agregar el codigo de los filtros
 }
 
 void read_menu_buttons()
