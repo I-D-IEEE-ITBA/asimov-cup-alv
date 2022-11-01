@@ -6,8 +6,6 @@ unsigned long intervalYellow = 4000;
 unsigned long intervalGreen = 6000;
 
 
-using namespace std;
-
 /**
  * @brief Construct a new ALVLeds::ALVLeds object
  *
@@ -18,18 +16,22 @@ ALVLeds::ALVLeds(int numPixel, int pin)
 {
     pinMode(PIN, INPUT_PULLUP);
 
-    pixels = &Adafruit_NeoPixel(numPixel, pin, NEO_GRB + NEO_KHZ800);
-
-    pixels->begin(); // Initialize the objects
-    pixels->setBrightness(200);
-    pixels->show(); // Initialize all pixels to 'off'
-
-    ledsBegin(leds);
+    pixels = new Adafruit_NeoPixel(numPixel, pin, NEO_GRB + NEO_KHZ800);
 
 }
 
 ALVLeds::~ALVLeds()
 {
+    delete pixels;
+}
+
+void ALVLeds::begin()
+{
+    pixels->begin(); // Initialize the objects
+    pixels->setBrightness(200);
+    pixels->show(); // Initialize all pixels to 'off'
+
+    ledsBegin(leds);
 }
 
 /**

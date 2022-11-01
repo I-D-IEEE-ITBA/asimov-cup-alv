@@ -8,9 +8,7 @@
 
 
 #include <Arduino.h>
-
 #include <Adafruit_NeoPixel.h>
-#include <TimedProcess.h>
 
 #define PIN 8               // Pin of the board
 #define NUMLEDS 3
@@ -51,6 +49,8 @@ public:
 
     //Led's Data
     Led_t leds[NUMLEDS];
+
+    void begin();
 
     //Auxiliar Functions
     int runSurround(int led, uint32_t color, unsigned long interval); // led go from 1 to 3 // led = 0 -> (all leds)

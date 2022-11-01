@@ -2,10 +2,12 @@
 
 #include <OneButton.h>
 
+#include "TimedProcess.h"
 #include <RaceController.h>		// https://github.com/Rafdal/ieee-alv-lap-chrono
 #include <Menu.h>				// https://github.com/Rafdal/lib-menu-arduino
 #include <NumForm.h>
 #include "Display.h"
+#include "ALVLeds.h"
 
 Display disp;
 
@@ -13,6 +15,8 @@ OneButton btnNext(4);
 OneButton btnSelect(6);
 
 OneButton btnIR(2);
+
+ALVLeds leds(21, 8);
 
 
 #define RACE_LAPS 3
@@ -35,6 +39,11 @@ void sensor_read_loop();
 void setup()
 {
 	Serial.begin(115200);
+
+	leds.begin();
+
+	Serial.println("STARTING");
+	delay(1000);
 
 	// Configurar event listeners globales para todos los menues
 	menu_set_event_listener_display(read_menu_buttons, update_menu_display);
@@ -66,6 +75,7 @@ void setup()
 	btnSelect.attachClick([](){
 		menu_go_select(); // Seleccionar la opcion
 		// Serial.println(F("select"));
+		disp.stopflush();
 	});
 
 	// milisegundos para considerar un long press (Se usa para detener la carrera)
@@ -97,10 +107,25 @@ void loop()
 
 void start_race_option()
 {
+	while (leds.startRace())
+	{
+		;
+	}
+	
+
 	raceControl.startWithAnimation(); // TODO: Agregar animacion
 
 	// Bucle bloqueante, hay que leer sensores y botones aca adentro
 	// Tiene que ser lo mas eficiente posible en velocidad para que el sensado sea optimo
+
+	TimedProcessMillis chronoLoop;
+	chronoLoop.set(50, [](){
+		unsigned long time = raceControl.getTime();
+		disp.printTime(time);
+
+		leds.waiting();
+	});
+	
 	while (raceControl.active())
 	{
 		raceControl.run();
@@ -108,6 +133,8 @@ void start_race_option()
 
 		// TODO: Agregar una seccion timeada para el display (sino no se ve el cronometro corriendo)
 		// 			Afectara el sensado? Hay que probar si mete delay al intento de DSP
+
+		chronoLoop.run();
 
 		read_menu_buttons();
 		if(btnNext.isLongPressed() || btnSelect.isLongPressed()) // Forzar detencion de carrera
@@ -117,6 +144,8 @@ void start_race_option()
 		}
 	}
 
+	leds.stopWaiting();
+
 	// FINISHED ANIMATION (No hay)
 
 	// TODO: Agregar animacion de finalizacion
@@ -125,6 +154,10 @@ void start_race_option()
 	if(raceControl.finished()) // (we have a winner)
 	{
 		raceControl.showWinnerStats();
+
+		unsigned long p1 = 46127;
+		disp.printTime(p1);
+		delay(3000);
 	}
 }
 
@@ -156,5 +189,6 @@ void update_menu_display()
 		Serial.println( menuData.option_titles[i]);
 	}
 	uint8_t len = strlen(menuData.option_titles[menuData.current_option]);
+
 	disp.flushMsg(menuData.option_titles[menuData.current_option], len);
 }

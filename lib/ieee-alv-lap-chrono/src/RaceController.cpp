@@ -1,5 +1,4 @@
 #include "RaceController.h"
-int status = true;
 
 RaceController::RaceController(uint8_t laps, unsigned int lapDistance)
 {
@@ -18,28 +17,12 @@ RaceController::~RaceController()
 
 void RaceController::startWithAnimation()
 {
+    winnerID = -1;
+    chrono[0].start();
+    chrono[1].start();
+    startTimestamp_ms = millis();
 
-    if (leds == NULL)
-    {
-        leds = new ALVLeds(21, 8);
-    }
-
-    if(status)
-    {
-        Serial.println(F("Starting with animation..."));
-        status = leds->startRace();
-    }
-    else
-    {
-        winnerID = -1;
-        chrono[0].start();
-        chrono[1].start();
-        startTimestamp_ms = millis();
-
-        status = true;
-
-        raceState = RaceStarting;
-    }
+    raceState = RaceStarting;
 }
 
 void RaceController::run()
@@ -61,6 +44,12 @@ void RaceController::run()
         raceState = RaceFinished;
     }
 }
+
+unsigned long RaceController::getTime()
+{
+    return (millis() - startTimestamp_ms);
+}
+
 
 int RaceController::winner()
 {

@@ -59,6 +59,12 @@ void Display::stopflush(){
   myLed.clear(); 
 } 
 
+void Display::printTime(unsigned long time)
+{
+  float timeF = (time)/1000.0f;
+  myLed.println(timeF,2);
+}
+
 void Display::doAnimation(){
   flushMsg(" ", 1); //clear
   flushMsg("IEEE - ItBA",11);

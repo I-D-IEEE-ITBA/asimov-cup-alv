@@ -10,6 +10,7 @@ public:
     ~Display();
 
     void printMsg(char * msg);
+    void printTime(unsigned long time);
     void flushMsg(char *msg, uint8_t len);
     void stopflush(); 
     void doAnimation();
