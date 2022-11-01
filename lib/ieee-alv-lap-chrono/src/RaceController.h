@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 #include "LapChrono.h"
+#include "ALVLeds.h"
+
 
 enum RaceState
 {
@@ -52,6 +54,8 @@ private:
     int8_t winnerID = -1;
 
     unsigned long startTimestamp_ms = 0;
+
+    ALVLeds *leds = NULL;
 };
 
 inline bool RaceController::active()

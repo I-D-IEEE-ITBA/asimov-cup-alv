@@ -5,11 +5,15 @@
 #include <RaceController.h>		// https://github.com/Rafdal/ieee-alv-lap-chrono
 #include <Menu.h>				// https://github.com/Rafdal/lib-menu-arduino
 #include <NumForm.h>
+#include "Display.h"
+
+Display disp;
 
 OneButton btnNext(4);
 OneButton btnSelect(6);
 
 OneButton btnIR(2);
+
 
 #define RACE_LAPS 3
 #define RACE_LAP_DISTANCE_CM	245 // TODO: Remover estas funcionalidades (segun Mati no aportan)
@@ -149,7 +153,8 @@ void update_menu_display()
 			Serial.print(F(" >"));
 		else
 			Serial.print(F("  "));
-		
 		Serial.println( menuData.option_titles[i]);
 	}
+	uint8_t len = strlen(menuData.option_titles[menuData.current_option]);
+	disp.flushMsg(menuData.option_titles[menuData.current_option], len);
 }
