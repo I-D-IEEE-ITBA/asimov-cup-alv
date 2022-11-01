@@ -39,7 +39,7 @@ class ALVLeds
 {
 private:
     // Vars
-    bool wait = false;
+
 
 public:
     ALVLeds(int numPixel, int pin);

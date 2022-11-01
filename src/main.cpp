@@ -107,11 +107,7 @@ void loop()
 
 void start_race_option()
 {
-	while (leds.startRace())
-	{
-		;
-	}
-	
+	leds.startRace();
 
 	raceControl.startWithAnimation(); // TODO: Agregar animacion
 
