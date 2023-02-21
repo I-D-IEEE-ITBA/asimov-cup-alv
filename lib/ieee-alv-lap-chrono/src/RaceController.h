@@ -64,9 +64,5 @@ inline bool RaceController::finished()
     return (raceState == RaceFinished);
 }
 
-inline void RaceController::lap(uint8_t id)
-{
-    chrono[id].lap();    
-}
 
 #endif

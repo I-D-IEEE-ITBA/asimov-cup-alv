@@ -17,10 +17,19 @@ void RaceController::startWithAnimation()
     winnerID = -1;
     chrono[0].start();
     chrono[1].start();
-    startTimestamp_ms = millis();
 
     raceState = RaceStarting;
     Serial.println(F("Starting with animation..."));
+}
+
+void RaceController::lap(uint8_t id)
+{
+    if ( raceState == RaceStarting)
+    {
+        raceState = RaceRunning;
+        startTimestamp_ms = millis();
+    }
+    chrono[id].lap();    
 }
 
 void RaceController::run()

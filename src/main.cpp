@@ -6,10 +6,21 @@
 #include <Menu.h>				// https://github.com/Rafdal/lib-menu-arduino
 #include <NumForm.h>
 
+#include <RaceSensor.h>
+RaceSensor sensor1(0);
+
+//  [ Pines ]
+// Boton Next: 		[4, GND]
+// Boton Select:	[6, GND]
+// IR 
+
+#define ENABLE_ANIMATIONS	true
+
 OneButton btnNext(4);
 OneButton btnSelect(6);
 
-OneButton btnIR(2);
+OneButton btnIR_L(2);
+OneButton btnIR_R(8);
 
 #define RACE_LAPS 3
 #define RACE_LAP_DISTANCE_CM	245 // TODO: Remover estas funcionalidades (segun Mati no aportan)
@@ -56,12 +67,10 @@ void setup()
 	// Set menu buttons callbacks
 	btnNext.attachClick([](){
 		menu_go_down(); // Ir a la opcion siguiente
-		// Serial.println(F("down"));
 	});
 
 	btnSelect.attachClick([](){
 		menu_go_select(); // Seleccionar la opcion
-		// Serial.println(F("select"));
 	});
 
 	// milisegundos para considerar un long press (Se usa para detener la carrera)
@@ -70,13 +79,13 @@ void setup()
 
 
 	// Sensor de velocista TEST (emulador)
-	btnIR.attachClick([](){
+	btnIR_L.attachClick([](){
 		Serial.println("P1 lap");
 		raceControl.lap(0);
 	});
 
 	// Sensor de velocista TEST (emulador)
-	btnIR.attachLongPressStart([](){
+	btnIR_R.attachClick([](){
 		Serial.println("P2 lap");
 		raceControl.lap(1);
 	});
@@ -84,6 +93,7 @@ void setup()
 
 	// TODO: Implementar el autoajuste de sensores al inicio (ajustar a luz ambiental)
 }
+
 
 void loop()
 {
@@ -126,8 +136,10 @@ void start_race_option()
 
 void sensor_read_loop()
 {
-	btnIR.tick(); // SENSOR EMULATOR 
+	btnIR_R.tick(); // SENSOR EMULATOR 
+	btnIR_L.tick(); // SENSOR EMULATOR 
 	// TODO: Agregar el codigo de los filtros
+	sensor1.read();
 }
 
 void read_menu_buttons()
@@ -150,6 +162,6 @@ void update_menu_display()
 		else
 			Serial.print(F("  "));
 		
-		Serial.println( menuData.option_titles[i]);
+		Serial.println( menuData.option_titles[i] );
 	}
 }
