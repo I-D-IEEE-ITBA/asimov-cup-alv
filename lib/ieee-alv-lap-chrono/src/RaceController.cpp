@@ -1,21 +1,22 @@
 #include "RaceController.h"
 
-RaceController::RaceController(uint8_t laps, unsigned int lapDistance)
+RaceController::RaceController()
 {
-    Serial.begin(115200);
-    maxLaps = laps;
-    this->lapDistance = lapDistance;
-    chrono[0].setMaxLaps(laps);
-    chrono[1].setMaxLaps(laps);
-    Serial.println("TEST");
-
 }
 
 RaceController::~RaceController()
 {
 }
 
-void RaceController::startWithAnimation()
+void RaceController::setupRace(uint8_t laps, unsigned int lapDistance)
+{
+    maxLaps = laps;
+    this->lapDistance = lapDistance;
+    chrono[0].setMaxLaps(laps);
+    chrono[1].setMaxLaps(laps);
+}
+
+void RaceController::startRace()
 {
     winnerID = -1;
     chrono[0].start();
@@ -73,15 +74,17 @@ void RaceController::showResults()
     }
 }
 
-void RaceController::showWinnerStats()
+void RaceController::showWinnerStats(int &winID, unsigned long& winTime)
 {
     if (winnerID != -1)
     {
         Serial.print(F("Winner is: Player"));
         Serial.println(winnerID + 1);
+        winID = winnerID + 1;
 
         Serial.print(F("\tmean time per lap: "));
         unsigned long totalTime = chrono[winnerID].getLapTimestampMS(maxLaps - 1) - startTimestamp_ms;
+        winTime = totalTime/10UL;
         Serial.print(totalTime / (1000.0f * maxLaps), 2);
         Serial.println(F(" s"));
 

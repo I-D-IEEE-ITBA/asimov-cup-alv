@@ -17,10 +17,12 @@ enum RaceState
 class RaceController
 {
 public:
-    RaceController(uint8_t laps, unsigned int lapDistance = 1);
+    RaceController();
     ~RaceController();
 
-    void startWithAnimation();
+    void setupRace(uint8_t laps, unsigned int lapDistance = 1);
+
+    void startRace();
 
     void lap(uint8_t id);
 
@@ -28,7 +30,7 @@ public:
     bool finished();
 
     void showResults();
-    void showWinnerStats();
+    void showWinnerStats(int &winID, unsigned long& winTime);
 
     int winner();
 

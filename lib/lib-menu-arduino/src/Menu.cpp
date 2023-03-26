@@ -69,14 +69,17 @@ void Menu::run(){
                 break;
 
             case MENU_STATE_UP: // Ir a la opcion superior
+                {
                 if(current_option >0)
                     current_option--;
                 else if( current_option == 0 && enable_option_roll)
                     current_option = n_options - 1;
                 break;
+                }
 
             case MENU_STATE_SELECT: // Seleccionar la opcion actual
-                if(option_callbacks[current_option] != NULL){
+                if(option_callbacks[current_option] != NULL)
+                {
                     option_callbacks[current_option]();
                     current_menu = this; // retomo el control (en caso de que se haya perdido)
                 }

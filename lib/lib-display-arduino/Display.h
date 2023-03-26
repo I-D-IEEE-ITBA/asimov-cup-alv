@@ -9,9 +9,9 @@ public:
     Display();
     ~Display();
 
-    void printMsg(char * msg);
+    void printMsg(const char * msg);
     void printTime(unsigned long time);
-    void flushMsg(char *msg, uint8_t len);
+    void flushMsg(const char *msg, uint8_t len);
     void stopflush(); 
     void doAnimation();
 

@@ -34,12 +34,12 @@ Display::~Display(){
 
 }
 
-void Display::printMsg(char * msg){
+void Display::printMsg(const char * msg){
   myLed.clear();
   myLed.println(msg);  
 }
 
-void Display::flushMsg(char *msg, uint8_t len){  
+void Display::flushMsg(const char *msg, uint8_t len){  
   memcpy(text+8, msg, len);
   for (int i=0;i<8;i++){
     text[i]=' ';    
