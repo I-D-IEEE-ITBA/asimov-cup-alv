@@ -62,7 +62,7 @@ void Display::stopflush(){
 void Display::printTime(unsigned long time)
 {
   float timeF = (time)/1000.0f;
-  myLed.println(timeF,2);
+  myLed.println(timeF,1);
 }
 
 void Display::doAnimation(){

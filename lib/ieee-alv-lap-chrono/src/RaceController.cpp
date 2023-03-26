@@ -68,9 +68,9 @@ void RaceController::showResults()
     {
         Serial.print(i);
         Serial.print('\t');
-        Serial.print((chrono[0].getLapTimestampMS(i) - startTimestamp_ms) / 1000.0f, 2);
+        Serial.print((chrono[0].getLapTimestampMS(i) - startTimestamp_ms) / 1000.0f, 3);
         Serial.print('\t');
-        Serial.println((chrono[1].getLapTimestampMS(i) - startTimestamp_ms) / 1000.0f, 2);
+        Serial.println((chrono[1].getLapTimestampMS(i) - startTimestamp_ms) / 1000.0f, 3);
     }
 }
 
@@ -85,7 +85,7 @@ void RaceController::showWinnerStats(int &winID, unsigned long& winTime)
         Serial.print(F("\tmean time per lap: "));
         unsigned long totalTime = chrono[winnerID].getLapTimestampMS(maxLaps - 1) - startTimestamp_ms;
         winTime = totalTime/10UL;
-        Serial.print(totalTime / (1000.0f * maxLaps), 2);
+        Serial.print(totalTime / (1000.0f * maxLaps), 3);
         Serial.println(F(" s"));
 
         Serial.print(F("\tmean speed: "));

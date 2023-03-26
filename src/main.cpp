@@ -4,10 +4,12 @@
 
 #include "TimedProcess.h"
 #include <RaceController.h>		// https://github.com/Rafdal/ieee-alv-lap-chrono
+#include <RaceSensor.h>
 #include <Menu.h>				// https://github.com/Rafdal/lib-menu-arduino
 #include <NumForm.h>
 #include "Display.h"
 #include "ALVLeds.h"
+
 
 #define RACE_LAP_DISTANCE_CM	245
 #define RACE_MAX_LAPS			12
@@ -37,7 +39,8 @@ ALVLeds leds(NUM_LEDS, PIN_LEDS);
 
 
 RaceController raceControl;
-
+RaceSensor sensor1(0);
+RaceSensor sensor2(1);
 
 Menu main_menu(3, "Main menu");
 
@@ -64,7 +67,6 @@ void setup()
 	
 	// Configurar event listeners globales para todos los menues
 	menu_set_event_listener_display(read_menu_buttons, update_menu_display);
-	menu_set_real_time_loop(sensor_read_loop);
 
 	// Interfaz del menu principal
 	main_menu.set_option(0, "Correr", start_race_option);
@@ -137,6 +139,12 @@ void start_race_option()
 	// Tiene que ser lo mas eficiente posible en velocidad para que el sensado sea optimo
 
 	TimedProcessMillis chronoLoop;
+	TimedProcessMicros sensorLoop;
+
+	sensorLoop.set(1500, [](){	// T = 1ms (1KHz)
+		sensor_read_loop();
+	});
+
 	chronoLoop.set(100, [](){	// T = 100ms (10 FPS)
 		unsigned long time = raceControl.getTime();
 		disp.printTime(time);
@@ -149,7 +157,8 @@ void start_race_option()
 	while (raceControl.active())
 	{
 		raceControl.run();
-		sensor_read_loop(); 
+
+		sensorLoop.run();
 
 		// TODO: Medir cuanto delay mete el chronoLoop.run()
 		// 			Afectara el sensado?
@@ -220,7 +229,7 @@ void show_race_results()
 
 		// Clear display
 		disp.printMsg("");
-		delay(600);
+		delay(300);
 		// Flush buttons (Esto es para que los botones no ejecuten nada al salir de la funcion)
 		btnNext.tick();
 		btnSelect.tick();
@@ -234,8 +243,16 @@ void show_race_results()
 
 void sensor_read_loop()
 {
-	btnIR.tick(); // SENSOR EMULATOR 
+	// btnIR.tick(); // SENSOR EMULATOR 
 	// TODO: Agregar el codigo de los filtros
+	if (sensor1.read())
+	{
+		raceControl.lap(0);
+	}
+	if (sensor2.read())
+	{
+		raceControl.lap(1);
+	}
 }
 
 void read_menu_buttons()
