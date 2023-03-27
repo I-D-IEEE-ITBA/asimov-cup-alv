@@ -18,8 +18,8 @@
 // **************************
 // *		PIN SETUP 		*
 // **************************
-const uint8_t PIN_BUTTON_NEXT = 4;
-const uint8_t PIN_BUTTON_SELECT = 6;
+const uint8_t PIN_BUTTON_NEXT = A3;
+const uint8_t PIN_BUTTON_SELECT = A2;
 const uint8_t PIN_LEDS = 8;
 const uint8_t PIN_DISPLAY_CS = 10;
 const uint8_t PIN_DISPLAY_DATA = 11;
