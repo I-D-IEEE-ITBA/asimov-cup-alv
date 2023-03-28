@@ -24,6 +24,7 @@ public:
     void startRace();
 
     void lap(uint8_t id);
+    uint8_t getLap(uint8_t id);
 
     bool active();
     bool finished();
@@ -72,6 +73,11 @@ inline bool RaceController::finished()
 inline void RaceController::lap(uint8_t id)
 {
     chrono[id].lap();    
+}
+
+inline uint8_t RaceController::getLap(uint8_t id)
+{
+    return chrono[id].currentLap();    
 }
 
 #endif

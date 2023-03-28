@@ -18,8 +18,8 @@
 // **************************
 // *		PIN SETUP 		*
 // **************************
-const uint8_t PIN_BUTTON_NEXT = A3;
-const uint8_t PIN_BUTTON_SELECT = A2;
+const uint8_t PIN_BUTTON_NEXT = A5;
+const uint8_t PIN_BUTTON_SELECT = A3;
 const uint8_t PIN_LEDS = 8;
 const uint8_t PIN_DISPLAY_CS = 10;
 const uint8_t PIN_DISPLAY_DATA = 11;
@@ -39,9 +39,8 @@ ALVLeds leds(NUM_LEDS, PIN_LEDS);
 
 
 RaceController raceControl;
-RaceSensor sensor1(0);
-RaceSensor sensor2(1);
-
+RaceSensor sensor1(A0);
+RaceSensor sensor2(A1);
 Menu main_menu(3, "Main menu");
 
 #define NUM_FORM_LAPS_MEM_POS 0
@@ -67,6 +66,7 @@ void setup()
 	
 	// Configurar event listeners globales para todos los menues
 	menu_set_event_listener_display(read_menu_buttons, update_menu_display);
+	menu_set_real_time_loop(sensor_read_loop);
 
 	// Interfaz del menu principal
 	main_menu.set_option(0, "Correr", start_race_option);
@@ -243,15 +243,20 @@ void show_race_results()
 
 void sensor_read_loop()
 {
-	// btnIR.tick(); // SENSOR EMULATOR 
-	// TODO: Agregar el codigo de los filtros
-	if (sensor1.read())
+	// Si la carrera no está activa, los sensores se autocalibran todo el tiempo
+	bool calibrationMode = !raceControl.active();
+
+	if (sensor1.read(calibrationMode))
 	{
 		raceControl.lap(0);
+		Serial.print(F("S1 Lap: "));
+		Serial.println(raceControl.getLap(0));
 	}
-	if (sensor2.read())
+	if (sensor2.read(calibrationMode))
 	{
 		raceControl.lap(1);
+		Serial.print(F("S2 Lap: "));
+		Serial.println(raceControl.getLap(1));
 	}
 }
 

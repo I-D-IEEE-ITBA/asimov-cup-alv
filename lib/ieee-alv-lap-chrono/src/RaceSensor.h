@@ -39,7 +39,7 @@ public:
     RaceSensor(uint8_t pin);
     ~RaceSensor();
 
-    bool read();
+    bool read(bool calibrationMode = false);
 
     void tune();
 };
@@ -115,12 +115,12 @@ void RaceSensor::tune()
 }
 
 
-bool RaceSensor::read()
+bool RaceSensor::read(bool calibrationMode)
 {
     _filter();
     bool sch = schmitt->filter( out );
 
-    if(sch && (millis() - lastDetection) > DETECTION_DEBOUNCE_MS)
+    if( !calibrationMode && sch && (millis() - lastDetection) > DETECTION_DEBOUNCE_MS)
     {
         lastDetection = millis();
         return true;
