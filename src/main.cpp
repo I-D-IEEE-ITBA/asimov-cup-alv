@@ -13,7 +13,7 @@
 
 #define RACE_LAP_DISTANCE_CM	245
 #define RACE_MAX_LAPS			12
-#define DISABLE_LEDS true
+#define DISABLE_LEDS false
 
 // **************************
 // *		PIN SETUP 		*
@@ -53,6 +53,8 @@ void start_race_option();
 void show_race_results();
 
 void sensor_read_loop();
+
+bool hayAuto = false;
 
 void setup()
 {
@@ -119,13 +121,19 @@ void loop()
 
 void start_race_option()
 {
+	Serial.print("inicio RACE CTRL: ");
+	Serial.println((int)raceControl.active());
+
+
 	// +1 porque la primera vuelta es para marcar el inicio de la carrera
-	raceControl.setupRace(numFormLaps.get() + 1, RACE_LAP_DISTANCE_CM);
+	raceControl.setupRace(numFormLaps.get(), RACE_LAP_DISTANCE_CM);
 
 	// Animacion
+	Serial.println("Start Race");
 	#if !DISABLE_LEDS
-	leds.startRace();
+	// leds.startRace();
 	#endif
+	Serial.println("Race Starting...");
 
 	// disp.printMsg("3");
 	// delay(1000);
@@ -134,7 +142,8 @@ void start_race_option()
 	// disp.printMsg("1");
 	// delay(1000);
 
-	raceControl.startRace(); 
+	raceControl.prepareRace();
+
 	// Bucle bloqueante, hay que leer sensores y botones aca adentro
 	// Tiene que ser lo mas eficiente posible en velocidad para que el sensado sea optimo
 
@@ -143,7 +152,20 @@ void start_race_option()
 
 	sensorLoop.set(1500, [](){	// T = 1ms (1KHz)
 		sensor_read_loop();
+
+		// Serial.print((int)hayAuto);
+		// Serial.print((int)raceControl.active());
+		// Serial.println("asdasd");
+		// BOKEEEEE
+		if( hayAuto && raceControl.state() == RaceStarting)
+		{
+			raceControl.startRace(); 
+		}
 	});
+
+	Serial.print("antes RACE CTRL: ");
+	Serial.println((int)raceControl.active());
+
 
 	chronoLoop.set(100, [](){	// T = 100ms (10 FPS)
 		unsigned long time = raceControl.getTime();
@@ -154,10 +176,9 @@ void start_race_option()
 		#endif
 	});
 	
-	while (raceControl.active())
+	while (1)
 	{
 		raceControl.run();
-
 		sensorLoop.run();
 
 		// TODO: Medir cuanto delay mete el chronoLoop.run()
@@ -173,6 +194,11 @@ void start_race_option()
 			raceControl.stop();
 			delay(1000);
 		}
+
+		if(raceControl.finished())
+		{
+			break;
+		}
 	}
 
 	#if !DISABLE_LEDS
@@ -181,12 +207,14 @@ void start_race_option()
 
 	// FINISHED ANIMATION (No hay)
 
-	// TODO: Agregar animacion de finalizacion
-	raceControl.showResults();
-
 	if(raceControl.finished()) // (we have a winner)
 	{
+		Serial.println("We have a Winner");
 		show_race_results();
+	}
+	else
+	{
+		Serial.println("NO HAY WINNER");
 	}
 }
 
@@ -245,18 +273,25 @@ void sensor_read_loop()
 {
 	// Si la carrera no está activa, los sensores se autocalibran todo el tiempo
 	bool calibrationMode = !raceControl.active();
+	// bool calibrationMode = false;
+
+	// if(raceControl.state() == Race)
+	
+	hayAuto = false;
 
 	if (sensor1.read(calibrationMode))
 	{
 		raceControl.lap(0);
 		Serial.print(F("S1 Lap: "));
 		Serial.println(raceControl.getLap(0));
+		hayAuto = true;
 	}
 	if (sensor2.read(calibrationMode))
 	{
 		raceControl.lap(1);
 		Serial.print(F("S2 Lap: "));
 		Serial.println(raceControl.getLap(1));
+		hayAuto = true;
 	}
 }
 

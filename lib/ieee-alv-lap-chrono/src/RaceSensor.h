@@ -11,7 +11,7 @@
 #include <SMA.h>
 #include <Schmitt.h>
 
-#define DETECTION_DEBOUNCE_MS 1800
+#define DETECTION_DEBOUNCE_MS 1100
 
 class RaceSensor
 {

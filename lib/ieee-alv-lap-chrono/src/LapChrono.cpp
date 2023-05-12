@@ -16,6 +16,12 @@ void LapChrono::setMaxLaps(uint8_t laps)
         delete[] lapTimestamp;
 
     lapTimestamp = new unsigned long [laps + 1];
+
+    for(int i=0; i< laps+1 ; i++)
+        lapTimestamp[i] = 0;
+    
+    lapCount = 0;
+    stop();
 }
 
 // chronometer control functions

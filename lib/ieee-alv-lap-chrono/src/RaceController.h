@@ -21,6 +21,7 @@ public:
 
     void setupRace(uint8_t laps, unsigned int lapDistance = 1);
 
+    void prepareRace();
     void startRace();
 
     void lap(uint8_t id);
@@ -28,6 +29,7 @@ public:
 
     bool active();
     bool finished();
+    uint8_t state();
 
     void showResults();
     void showWinnerStats(int &winID, unsigned long& winTime);
@@ -59,6 +61,11 @@ private:
 
     unsigned long startTimestamp_ms = 0;
 };
+
+inline uint8_t RaceController::state()
+{
+    return raceState;
+}
 
 inline bool RaceController::active()
 {

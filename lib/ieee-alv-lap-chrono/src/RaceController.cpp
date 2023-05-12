@@ -16,14 +16,18 @@ void RaceController::setupRace(uint8_t laps, unsigned int lapDistance)
     chrono[1].setMaxLaps(laps);
 }
 
-void RaceController::startRace()
+void RaceController::prepareRace()
 {
     winnerID = -1;
+    raceState = RaceStarting;
+}
+
+void RaceController::startRace()
+{
     chrono[0].start();
     chrono[1].start();
     startTimestamp_ms = millis();
-
-    raceState = RaceStarting;
+    raceState = RaceRunning;
 }
 
 void RaceController::run()
@@ -48,6 +52,9 @@ void RaceController::run()
 
 unsigned long RaceController::getTime()
 {
+    if (!active() || raceState == RaceStarting)
+        return 0;
+
     return (millis() - startTimestamp_ms);
 }
 
