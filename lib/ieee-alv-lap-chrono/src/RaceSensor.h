@@ -70,7 +70,7 @@ RaceSensor::~RaceSensor()
 
 void RaceSensor::_filter()
 {
-    raw = map( constrain( analogRead(pin), 550, 1023), 550, 1023, 0, 255);
+    raw = map( constrain( analogRead(pin), 0, 1023), 0, 1023, 0, 255);
     sma->write(raw);
     // bigEma->write(sma->read());
 

@@ -62,6 +62,8 @@ void setup()
 
 	leds.begin(); // NeoPixel LEDS
 
+	pinMode(9, OUTPUT);
+
 	disp.printMsg("IEEEItba");
 	Serial.println(F("IEEE ALV STARTING..."));
 	delay(2000);
@@ -135,6 +137,8 @@ void start_race_option()
 	#endif
 	Serial.println("Race Starting...");
 
+	digitalWrite(9, HIGH);
+
 	// disp.printMsg("3");
 	// delay(1000);
 	// disp.printMsg("2");
@@ -174,6 +178,7 @@ void start_race_option()
 		#if !DISABLE_LEDS
 		leds.waiting();
 		#endif
+		digitalWrite(9, LOW);
 	});
 	
 	while (1)
