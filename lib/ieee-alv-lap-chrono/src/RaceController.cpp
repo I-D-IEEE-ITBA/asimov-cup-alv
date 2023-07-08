@@ -1,6 +1,14 @@
 #include "RaceController.h"
 
-RaceController::RaceController(uint8_t laps, unsigned int lapDistance)
+RaceController::RaceController()
+{
+}
+
+RaceController::~RaceController()
+{
+}
+
+void RaceController::setupRace(uint8_t laps, unsigned int lapDistance)
 {
     maxLaps = laps;
     this->lapDistance = lapDistance;
@@ -8,28 +16,18 @@ RaceController::RaceController(uint8_t laps, unsigned int lapDistance)
     chrono[1].setMaxLaps(laps);
 }
 
-RaceController::~RaceController()
-{    
-}
-
-void RaceController::startWithAnimation()
+void RaceController::prepareRace()
 {
     winnerID = -1;
-    chrono[0].start();
-    chrono[1].start();
-
     raceState = RaceStarting;
-    Serial.println(F("Starting with animation..."));
 }
 
-void RaceController::lap(uint8_t id)
+void RaceController::startRace()
 {
-    if ( raceState == RaceStarting)
-    {
-        raceState = RaceRunning;
-        startTimestamp_ms = millis();
-    }
-    chrono[id].lap();    
+    chrono[0].start();
+    chrono[1].start();
+    startTimestamp_ms = millis();
+    raceState = RaceRunning;
 }
 
 void RaceController::run()
@@ -38,13 +36,13 @@ void RaceController::run()
     for (uint8_t i = 0; i < 2; i++)
     {
         raceFinishedFlag |= chrono[i].finished();
-        if(chrono[i].finished() && (winnerID == -1))
+        if (chrono[i].finished() && (winnerID == -1))
         {
             winnerID = i;
         }
     }
-    
-    if(raceFinishedFlag)
+
+    if (raceFinishedFlag)
     {
         chrono[0].finish();
         chrono[1].finish();
@@ -52,13 +50,22 @@ void RaceController::run()
     }
 }
 
+unsigned long RaceController::getTime()
+{
+    if (!active() || raceState == RaceStarting)
+        return 0;
+
+    return (millis() - startTimestamp_ms);
+}
+
+
 int RaceController::winner()
 {
-    if(winnerID == -1)
+    if (winnerID == -1)
     {
         return 404;
     }
-    return winnerID + 1;  // start with 1
+    return winnerID + 1; // start with 1
 }
 
 void RaceController::showResults()
@@ -68,26 +75,28 @@ void RaceController::showResults()
     {
         Serial.print(i);
         Serial.print('\t');
-        Serial.print((chrono[0].getLapTimestampMS(i) - startTimestamp_ms)/1000.0f, 2);
+        Serial.print((chrono[0].getLapTimestampMS(i) - startTimestamp_ms) / 1000.0f, 3);
         Serial.print('\t');
-        Serial.println((chrono[1].getLapTimestampMS(i) - startTimestamp_ms)/1000.0f, 2);
+        Serial.println((chrono[1].getLapTimestampMS(i) - startTimestamp_ms) / 1000.0f, 3);
     }
 }
 
-void RaceController::showWinnerStats()
+void RaceController::showWinnerStats(int &winID, unsigned long& winTime)
 {
-    if(winnerID != -1)
+    if (winnerID != -1)
     {
         Serial.print(F("Winner is: Player"));
-		Serial.println(winnerID+1);
+        Serial.println(winnerID + 1);
+        winID = winnerID + 1;
 
-		Serial.print(F("\tmean time per lap: "));
-        unsigned long totalTime = chrono[winnerID].getLapTimestampMS(maxLaps-1) - startTimestamp_ms;
-        Serial.print(totalTime/(1000.0f * maxLaps), 2);
+        Serial.print(F("\tmean time per lap: "));
+        unsigned long totalTime = chrono[winnerID].getLapTimestampMS(maxLaps - 1) - startTimestamp_ms;
+        winTime = totalTime/10UL;
+        Serial.print(totalTime / (1000.0f * maxLaps), 3);
         Serial.println(F(" s"));
 
         Serial.print(F("\tmean speed: "));
-        Serial.print(((maxLaps*1000UL)*lapDistance) / totalTime);
+        Serial.print(((maxLaps * 1000UL) * lapDistance) / totalTime);
         Serial.println(F(" cm / s"));
     }
-} 
+}

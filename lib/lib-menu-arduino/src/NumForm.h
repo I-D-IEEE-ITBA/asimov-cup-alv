@@ -10,23 +10,25 @@
 class NumForm : public Menu
 {
 public:
-    NumForm(const char* title);
+    NumForm(const char* title, unsigned int memPos);
     ~NumForm();
 
     void set(uint8_t v);
     uint8_t get();
 
     void begin(uint8_t min, uint8_t max, const char* incTit = "INC",
-               const char* decTit = "DEC", const char* backTit = "BACK");
+               const char* decTit = "DEC", const char* backTit = "atras");
 
     virtual void run();
 
 private:
     
-    char str[4];
+    char incStr[8];
+    char decStr[8];
     uint8_t val;
     uint8_t min = 0;
     uint8_t max = 0;
+    unsigned int memPos = 0;
 };
 
 inline void NumForm::set(uint8_t v)
