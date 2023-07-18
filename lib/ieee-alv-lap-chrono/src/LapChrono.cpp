@@ -11,7 +11,7 @@ LapChrono::~LapChrono()
 
 void LapChrono::setMaxLaps(uint8_t laps)
 {
-    maxLaps = laps;
+    maxLaps = laps + 1;
     if(lapTimestamp)
         delete[] lapTimestamp;
 

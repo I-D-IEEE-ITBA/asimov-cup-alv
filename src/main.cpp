@@ -54,7 +54,9 @@ void show_race_results();
 
 void sensor_read_loop();
 
-bool hayAuto = false;
+
+
+int8_t hayAuto = -1;
 
 void setup()
 {
@@ -147,9 +149,10 @@ void start_race_option()
 	sensorLoop.set(1500, [](){	// T = 1ms (1KHz)
 		sensor_read_loop();
 
-		if( hayAuto && raceControl.state() == RaceStarting)
+		if( hayAuto != -1 && raceControl.state() == RaceStarting)
 		{
 			raceControl.startRace(); 
+			raceControl.lap(hayAuto);
 		}
 	});
 
@@ -264,21 +267,21 @@ void sensor_read_loop()
 
 	// if(raceControl.state() == Race)
 	
-	hayAuto = false;
+	hayAuto = -1;
 
 	if (sensor1.read(calibrationMode))
 	{
 		raceControl.lap(0);
 		Serial.print(F("S1 Lap: "));
 		Serial.println(raceControl.getLap(0));
-		hayAuto = true;
+		hayAuto = 0;
 	}
 	if (sensor2.read(calibrationMode))
 	{
 		raceControl.lap(1);
 		Serial.print(F("S2 Lap: "));
 		Serial.println(raceControl.getLap(1));
-		hayAuto = true;
+		hayAuto = 1;
 	}
 }
 
