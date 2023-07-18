@@ -22,12 +22,14 @@ void ALVLedsAsync::run()
         if (led_idx >= 6)
         {
             led_idx = 0;
+            clear();
         }
 
-        setPixelColor(i, Color(0, 0, 255));
-        setPixelColor(i + 7, Color(0, 0, 255));
-        setPixelColor(i + 14, Color(0, 0, 255));
+        setPixelColor(led_idx, Color(0, 0, 255));
+        setPixelColor(led_idx + 7, Color(0, 0, 255));
+        setPixelColor(led_idx + 14, Color(0, 0, 255));
 
+        show();
         led_idx++;
         lastMs = millis();
     }
