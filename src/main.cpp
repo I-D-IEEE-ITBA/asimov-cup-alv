@@ -10,7 +10,7 @@
 #include "Display.h"
 #include "ALVLedsAsync.h"
 
-
+#define BAUDRATE 115200
 #define RACE_LAP_DISTANCE_CM	245
 #define RACE_MAX_LAPS			12
 #define DISABLE_LEDS false
@@ -30,9 +30,6 @@ Display disp; // 7 segment 8 digit display
 OneButton btnNext(PIN_BUTTON_NEXT);
 OneButton btnSelect(PIN_BUTTON_SELECT);
 
-// TEST
-// TODO: REMOVER ESTO
-OneButton btnIR(2);
 
 #define NUM_LEDS 21
 ALVLedsAsync leds(NUM_LEDS, PIN_LEDS);
@@ -56,11 +53,11 @@ void sensor_read_loop();
 
 
 
-int8_t hayAuto = -1;
+int8_t hayAuto = -1; // -1 = no hay auto,  0 = auto_0,  1 = auto_1
 
 void setup()
 {
-	Serial.begin(115200);
+	Serial.begin(BAUDRATE);
 
 	leds.begin(); // NeoPixel LEDS
 
@@ -98,21 +95,6 @@ void setup()
 	btnNext.setPressTicks(1200);
 	btnSelect.setPressTicks(1200);
 
-
-	// TODO: Remover esto
-	// Sensor de velocista TEST (emulador)
-	btnIR.attachClick([](){
-		Serial.println("P1 lap");
-		raceControl.lap(0);
-	});
-	// Sensor de velocista TEST (emulador)
-	btnIR.attachLongPressStart([](){
-		Serial.println("P2 lap");
-		raceControl.lap(1);
-	});
-
-
-	// TODO: Implementar el autoajuste de sensores al inicio (ajustar a luz ambiental)
 }
 
 void loop()
