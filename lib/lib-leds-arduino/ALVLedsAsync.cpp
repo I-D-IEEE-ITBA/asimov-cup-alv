@@ -17,9 +17,9 @@ void ALVLedsAsync::initRace()
 void ALVLedsAsync::run()
 {
     // Intervalo
-    if (millis() - lastMs < 100)
+    if (millis() - lastMs >= 100)
     {
-        if (led_idx >= 6)
+        if (led_idx >= 7)
         {
             led_idx = 0;
             clear();
@@ -32,6 +32,7 @@ void ALVLedsAsync::run()
         show();
         led_idx++;
         lastMs = millis();
+        Serial.println("LED");
     }
 }
 
@@ -78,4 +79,6 @@ void ALVLedsAsync::initRaceAnimation()
     digitalWrite(9, HIGH);
     delay(400);
     digitalWrite(9, LOW);
+
+    led_idx = 0;
 }

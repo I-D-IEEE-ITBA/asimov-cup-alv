@@ -135,12 +135,6 @@ void start_race_option()
 	#endif
 	Serial.println("Race Starting...");
 
-	// disp.printMsg("3");
-	// delay(1000);
-	// disp.printMsg("2");
-	// delay(1000);
-	// disp.printMsg("1");
-	// delay(1000);
 
 	raceControl.prepareRace();
 
@@ -153,18 +147,11 @@ void start_race_option()
 	sensorLoop.set(1500, [](){	// T = 1ms (1KHz)
 		sensor_read_loop();
 
-		// Serial.print((int)hayAuto);
-		// Serial.print((int)raceControl.active());
-		// Serial.println("asdasd");
-		// BOKEEEEE
 		if( hayAuto && raceControl.state() == RaceStarting)
 		{
 			raceControl.startRace(); 
 		}
 	});
-
-	Serial.print("antes RACE CTRL: ");
-	Serial.println((int)raceControl.active());
 
 
 	chronoLoop.set(100, [](){	// T = 100ms (10 FPS)
@@ -180,6 +167,7 @@ void start_race_option()
 	{
 		raceControl.run();
 		sensorLoop.run();
+		leds.run();
 
 		// TODO: Medir cuanto delay mete el chronoLoop.run()
 		// 			Afectara el sensado?
@@ -201,9 +189,8 @@ void start_race_option()
 		}
 	}
 
-	#if !DISABLE_LEDS
-
-	#endif
+	leds.clear();
+	leds.show();
 
 	// FINISHED ANIMATION (No hay)
 
