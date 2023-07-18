@@ -90,7 +90,7 @@ void RaceController::showWinnerStats(int &winID, unsigned long& winTime)
         winID = winnerID + 1;
 
         Serial.print(F("\tmean time per lap: "));
-        unsigned long totalTime = chrono[winnerID].getLapTimestampMS(maxLaps - 1) - startTimestamp_ms;
+        unsigned long totalTime = chrono[winnerID].getLapTimestampMS(maxLaps) - startTimestamp_ms;
         winTime = totalTime/10UL;
         Serial.print(totalTime / (1000.0f * maxLaps), 3);
         Serial.println(F(" s"));

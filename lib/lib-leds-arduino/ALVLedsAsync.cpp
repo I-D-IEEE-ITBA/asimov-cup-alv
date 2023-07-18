@@ -32,7 +32,6 @@ void ALVLedsAsync::run()
         show();
         led_idx++;
         lastMs = millis();
-        Serial.println("LED");
     }
 }
 
