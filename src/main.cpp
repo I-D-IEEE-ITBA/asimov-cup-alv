@@ -39,8 +39,8 @@ ALVLedsAsync leds(NUM_LEDS, PIN_LEDS);
 
 
 RaceController raceControl;
-RaceSensor sensor1(A0);
-RaceSensor sensor2(A1);
+RaceSensor sensor1(A1);
+RaceSensor sensor2(A0);
 Menu main_menu(3, "Main menu");
 
 #define NUM_FORM_LAPS_MEM_POS 0
@@ -61,8 +61,6 @@ void setup()
 	Serial.begin(115200);
 
 	leds.begin(); // NeoPixel LEDS
-
-	pinMode(9, OUTPUT);
 
 	disp.printMsg("IEEEItba");
 	Serial.println(F("IEEE ALV STARTING..."));
@@ -137,8 +135,6 @@ void start_race_option()
 	#endif
 	Serial.println("Race Starting...");
 
-	digitalWrite(9, HIGH);
-
 	// disp.printMsg("3");
 	// delay(1000);
 	// disp.printMsg("2");
@@ -178,7 +174,6 @@ void start_race_option()
 		#if !DISABLE_LEDS
 
 		#endif
-		digitalWrite(9, LOW);
 	});
 	
 	while (1)
