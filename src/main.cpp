@@ -8,7 +8,7 @@
 #include <Menu.h>				// https://github.com/Rafdal/lib-menu-arduino
 #include <NumForm.h>
 #include "Display.h"
-#include "ALVLeds.h"
+#include "ALVLedsAsync.h"
 
 
 #define RACE_LAP_DISTANCE_CM	245
@@ -35,7 +35,7 @@ OneButton btnSelect(PIN_BUTTON_SELECT);
 OneButton btnIR(2);
 
 #define NUM_LEDS 21
-ALVLeds leds(NUM_LEDS, PIN_LEDS);
+ALVLedsAsync leds(NUM_LEDS, PIN_LEDS);
 
 
 RaceController raceControl;
@@ -133,7 +133,7 @@ void start_race_option()
 	// Animacion
 	Serial.println("Start Race");
 	#if !DISABLE_LEDS
-	// leds.startRace();
+	leds.initRace();
 	#endif
 	Serial.println("Race Starting...");
 
@@ -176,7 +176,7 @@ void start_race_option()
 		disp.printTime(time);
 
 		#if !DISABLE_LEDS
-		leds.waiting();
+
 		#endif
 		digitalWrite(9, LOW);
 	});
@@ -207,7 +207,7 @@ void start_race_option()
 	}
 
 	#if !DISABLE_LEDS
-	leds.stopWaiting();
+
 	#endif
 
 	// FINISHED ANIMATION (No hay)
