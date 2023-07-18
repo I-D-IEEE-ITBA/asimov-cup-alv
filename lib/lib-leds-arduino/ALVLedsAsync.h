@@ -44,6 +44,9 @@ private:
 
     uint8_t state = LEDS_OFF;
 
+    unsigned long lastMs = 0;
+
+    uint8_t led_idx = 0;
 };
 
 

@@ -14,6 +14,21 @@ void ALVLedsAsync::initRace()
 
 void ALVLedsAsync::run()
 {
+    // Intervalo
+    if (millis() - lastMs < 100)
+    {
+        if (led_idx >= 6)
+        {
+            led_idx = 0;
+        }
+
+        setPixelColor(i, Color(0, 0, 255));
+        setPixelColor(i + 7, Color(0, 0, 255));
+        setPixelColor(i + 14, Color(0, 0, 255));
+
+        led_idx++;
+        lastMs = millis();
+    }
 }
 
 void ALVLedsAsync::initRaceAnimation()
