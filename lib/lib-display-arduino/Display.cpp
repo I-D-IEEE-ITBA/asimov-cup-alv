@@ -8,8 +8,7 @@ static uint8_t length;
 static char text[N];
 static int k=0;
 
-Display::Display(): myLed(11, 13, 10, 8){
-  //myLed = LedPrintJustifiable(11, 13, 10, 8); // 11 = data, 13 = clk, 10 = cs, 8 = number of digits
+Display::Display(int data, int clk, int cs, int pin): myLed(data, clk, cs, pin){ // 13 = data_in , 10 = clk, 11 = cs, 8 = number of digits
   myLed.setIntensity(5); // Set Brightness
   myLed.justify(-1); // Left justify
 
