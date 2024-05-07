@@ -6,7 +6,7 @@
 class Display
 {
 public:
-    Display();
+    Display(int data, int clk, int cs, int pin);
     ~Display();
 
     void printMsg(const char * msg);

@@ -21,12 +21,12 @@
 const uint8_t PIN_BUTTON_NEXT = A5;
 const uint8_t PIN_BUTTON_SELECT = A3;
 const uint8_t PIN_LEDS = 8;
-const uint8_t PIN_DISPLAY_CS = 10;
-const uint8_t PIN_DISPLAY_DATA = 11;
-const uint8_t PIN_DISPLAY_CLK = 13;
+const uint8_t PIN_DISPLAY_CS = 11;
+const uint8_t PIN_DISPLAY_DATA = 13;
+const uint8_t PIN_DISPLAY_CLK = 10;
 
 
-Display disp; // 7 segment 8 digit display
+Display disp(PIN_DISPLAY_DATA, PIN_DISPLAY_CLK, PIN_DISPLAY_CS, 8); // 7 segment 8 digit display
 OneButton btnNext(PIN_BUTTON_NEXT);
 OneButton btnSelect(PIN_BUTTON_SELECT);
 
