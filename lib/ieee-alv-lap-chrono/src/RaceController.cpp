@@ -71,7 +71,7 @@ int RaceController::winner()
 void RaceController::showResults()
 {
     Serial.println(F("LAP\tP1\tP2"));
-    for (uint8_t i = 0; i < maxLaps; i++)
+    for (uint8_t i = 0; i < maxLaps+1; i++)
     {
         Serial.print(i);
         Serial.print('\t');
